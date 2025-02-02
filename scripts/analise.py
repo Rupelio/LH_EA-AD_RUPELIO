@@ -39,6 +39,11 @@ correlacao_ipca = transacoes_totais['valor_transacao'].corr(transacoes_totais['I
 correlacao_pib = transacoes_totais['valor_transacao'].corr(transacoes_totais['PIB'])
 correlacao_desemprego = transacoes_totais['valor_transacao'].corr(transacoes_totais['Desemprego'])
 
+correlacoes = pd.DataFrame({
+    'Indicador': ['IPCA', 'PIB', 'Desemprego'],
+    'Correlação com Transações': [correlacao_ipca, correlacao_pib, correlacao_desemprego]
+})
+
 taxa_aprovacao = propostas_credito.groupby('status_proposta')['cod_proposta'].count().reset_index()
 taxa_aprovacao['percentual'] = (taxa_aprovacao['cod_proposta'] / taxa_aprovacao['cod_proposta'].sum()) * 100
 
@@ -61,9 +66,10 @@ def idade_clientes(nascimento):
 
 clientes['idade'] = clientes['data_nascimento'].apply(idade_clientes)
 
-clientes['faixa_etaria'] = pd.cut(clientes['idade'], bins=[18, 30, 40, 50, 60, 100], labels=['18-30', '31-40', '41-50', '51-60', '60+'])
+clientes['faixa_etaria'] = pd.cut(clientes['idade'], bins=[17, 30, 40, 50, 60, 100], labels=['18-30', '31-40', '41-50', '51-60', '60+'])
 
 transacoes_contas = pd.merge(transacoes, contas[['num_conta', 'cod_cliente']], on='num_conta', how='left')
 transacoes_clientes = pd.merge(transacoes_contas, clientes[['cod_cliente', 'faixa_etaria']], on='cod_cliente', how='left')
 
-transferencia_faixa_etaria = transacoes_clientes.groupby('faixa_etaria')['valor_transacao'].sum().reset_index()
+transacoes_faixa_etaria = transacoes_clientes.groupby('faixa_etaria')['valor_transacao'].sum().reset_index()
+
