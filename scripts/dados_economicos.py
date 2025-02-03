@@ -1,6 +1,8 @@
 import pandas as pd
 import requests
 
+# script para pegar a API dos dados governamentais de IPCA, PIB e desemprego para calcular a correlação com as transacoes do banco
+
 codigo_ipca = 433
 
 def dados_bcb(codigo, nome):

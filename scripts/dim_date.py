@@ -1,5 +1,7 @@
 import pandas as pd
 
+# script para criar um DataFrame do dim_date de forma correta
+
 start = '2010-01-01'
 end = '2023-12-31'
 
