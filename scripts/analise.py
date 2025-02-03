@@ -73,3 +73,20 @@ transacoes_clientes = pd.merge(transacoes_contas, clientes[['cod_cliente', 'faix
 
 transacoes_faixa_etaria = transacoes_clientes.groupby('faixa_etaria')['valor_transacao'].sum().reset_index()
 
+propostas_aprovadas = propostas_credito[propostas_credito['status_proposta'] == 'Aprovada']
+
+propostas_aprovadas['lucro_presumido'] = propostas_aprovadas['valor_financiamento'] * propostas_aprovadas['taxa_juros_mensal'] * propostas_aprovadas['quantidade_parcelas']
+
+lucro_total = propostas_aprovadas['lucro_presumido'].sum()
+valor_emprestado = propostas_aprovadas['valor_financiamento'].sum()
+if lucro_total > 0:
+    margem = (lucro_total - valor_emprestado) / lucro_total
+else:
+    margem = 0
+
+ticket_medio = propostas_aprovadas['valor_financiamento'].mean()
+
+propostas_df = pd.DataFrame({
+    'Métrica': ['Lucro Presumido', 'Margem Bruta', "Ticket Médio"],
+    'Valor': [lucro_total, margem, ticket_medio]
+})
